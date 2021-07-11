@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leimingting.mapper.DealRecordMapper">
+
+    <resultMap id="DealRecordResultMap" type="DealRecord">
+        <id property="id" column="id"/>
+        <result property="dealSn" column="name"/>
+        <result property="dealTime" column="deal_time"/>
+        <result property="dealWay" column="deal_way"/>
+        <result property="dealResult" column="deal_result"/>
+        <result property="comment" column="comment"/>
+    </resultMap>
+
+    <select id="selectAllByIdDealRecordInfo" resultMap="DealRecordResultMap">
+        SELECT r.id,
+               e.`name`,
+               r.deal_time,
+               r.deal_way,
+               r.deal_result,
+               r.`comment`
+        FROM deal_record r
+                 LEFT JOIN (SELECT * FROM employee) e ON e.sn = r.deal_sn
+        WHERE claim_voucher_id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leimingting.mapper.ClaimVoucherInfoMapper">
+    <resultMap id="claimVoucherInfoResultMap" type="claimVoucherInfo">
+        <id property="id" column="id"/>
+        <result property="cause" column="cause"/>
+        <result property="createTime" column="create_time"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="status" column="status"/>
+        <association property="createEmployee">
+            <id property="sn" column="sn"/>
+            <result property="password" column="password"/>
+            <result property="name" column="name"/>
+            <result property="post" column="post"/>
+        </association>
+    </resultMap>
+    <sql id="claimVoucherInfoWhere">
+        <where>
+            <if test="createSn!=null">
+                c.create_sn = #{createSn}
+            </if>
+            <if test="status!=null">
+                and c.status=#{status}
+            </if>
+        </where>
+    </sql>
+    <select id="selectClaimVoucherInfo" resultMap="claimVoucherInfoResultMap">
+        SELECT c.id, e.name, c.cause, c.create_time, c.`status`, c.total_amount
+        FROM claim_voucher c
+                 LEFT JOIN (SELECT * FROM employee) e ON e.sn = c.create_sn
+            ${ew.customSqlSegment}
+    </select>
+
+    <select id="selByIdClaimVoucherInfo" resultMap="claimVoucherInfoResultMap">
+        SELECT c.id, e.name, c.cause, c.create_time, c.`status`, c.total_amount
+        FROM claim_voucher c
+                 LEFT JOIN (SELECT * FROM employee) e ON e.sn = c.create_sn
+        WHERE c.id = #{id}
+    </select>
+    <select id="selectClaimVoucherInfoStatic" resultMap="claimVoucherInfoResultMap">
+        SELECT c.id, e.name, c.cause, c.create_time, c.`status`, c.total_amount
+        FROM claim_voucher c
+                 LEFT JOIN (SELECT * FROM employee) e ON e.sn = c.create_sn
+        where c.create_sn = #{createSn}
+          and (c.status = '未提交' or c.status = '已打回')
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+package com.leimingting.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.leimingting.pojo.DealRecord;
+
+import java.util.List;
+
+
+/**
+ * <p>
+ * Mapper 接口
+ * </p>
+ *
+ * @author 小T
+ * @since 2021-06-28
+ */
+public interface DealRecordMapper extends BaseMapper<DealRecord> {
+
+    List<DealRecord> selectAllByIdDealRecordInfo(Integer id);
+
+}

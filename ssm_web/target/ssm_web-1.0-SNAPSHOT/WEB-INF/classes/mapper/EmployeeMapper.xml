@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leimingting.mapper.EmployeeMapper">
+
+    <select id="findAll" resultType="employee">
+        SELECT e.sn, e.name, d.name as departmentSn, e.post
+        from employee e
+                 LEFT JOIN (SELECT * from department) d ON e.department_sn = d.sn
+            ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectEmployeeInfo" resultType="com.leimingting.pojo.Employee">
+        SELECT e.sn, e.password, e.name, d.name as departmentSn, e.post
+        from employee e
+                 LEFT JOIN (SELECT * from department) d ON e.department_sn = d.sn
+        where e.sn = #{sn}
+          and e.password = #{password}
+    </select>
+    <select id="selectBySnCheck" resultType="com.leimingting.pojo.Employee">
+        select *
+        from employee ${ew.customSqlSegment}
+    </select>
+
+</mapper>
