@@ -30,9 +30,12 @@ public class GlobalController {
      */
     @ResponseBody
     @RequestMapping("/login")
-    public String login(HttpSession session, String sn, String password) {
+    public String login(HttpSession session, String sn, String password,String verification) {
+        Object code = session.getAttribute("code");
         Employee employee = globalService.login(sn, password);
-        if (employee != null) {
+        if (!verification.equals(code)){
+            return "code error";
+        }else if (employee != null) {
             session.setAttribute("employee", employee);
             return "OK";
         } else {

@@ -83,6 +83,15 @@
                                     <span id="passwordCheck" class="help-block"></span>
                                 </label>
                             </div>
+                            <div class="section">
+                                <label for="username" class="field-label text-muted fs18 mb10">验证码</label>
+                                <label for="password" class="field prepend-icon">
+                                    <input type="text" name="verification" id="verification" class="gui-input" style="width: 150px">
+                                    <img id="num" src="${pageContext.request.contextPath}/go/getImage"/>
+                                    <a href="javascript:;" onclick="document.getElementById('num').src = '${pageContext.request.contextPath}/go/getImage?'+(new Date()).getTime()">换一张</a>
+                                    <span id="verificationCheck" class="help-block"></span>
+                                </label>
+                            </div>
                         </div>
 
                         <div class="panel-footer clearfix">
@@ -126,8 +135,10 @@
 <script>
     $('#password').focus(function (){
         $('#passwordCheck').text("")
-    })
-
+    });
+    $('#verification').focus(function (){
+        $('#verificationCheck').text("")
+    });
     $('#username').change(function (){
         let sn=this.value;
         $.ajax({
@@ -153,12 +164,18 @@
             data:$('#contact').serialize(),
             success:function (data){
                 $('#passwordCheck').parent().removeClass("has-success has-error");
+                $('#verificationCheck').parent().removeClass("has-success has-error");
                 console.log(data)
+                if (data=="code error"){
+                    $('#verificationCheck').parent().addClass("has-error");
+                    $('#verificationCheck').text("验证码错误");
+                    document.getElementById('num').src = '${pageContext.request.contextPath}/go/getImage?'+(new Date()).getTime();
+                }
                 if (data=="OK"){
                     $.get(
                         window.location.replace("${pageContext.request.contextPath}/go/index")
                     )
-                }else {
+                }else if (data=="FALL"){
                     $('#passwordCheck').parent().addClass("has-error");
                     $('#passwordCheck').text("工号或密码错误")
                 }
